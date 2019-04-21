@@ -8,7 +8,7 @@ import os
 import pydub
 from pydub import AudioSegment    #wavからmp3
 from pydub.playback import play
-
+import asyncio
 
 SOUNDFILE_ROOT = './sound/'
 RECORD_SECONDS = 10 #録音する時間の長さ（秒）
@@ -19,6 +19,7 @@ FORMAT = pyaudio.paInt16 #音声のフォーマット
 CHANNELS = 1             #モノラル
 RATE = 44100             #サンプルレート
 CHUNK = 2**11            #データ点数
+FLAG_RECORDING = 0       #録画中フラグ
 #audio = pyaudio.PyAudio() #pyaudio.PyAudio()
 
 def button_click_exit():
@@ -62,15 +63,17 @@ def button_click_play():
        messagebox.showinfo("Message","録音ファイルがありません")       
 
 def button_click_start():
-    show_selection()
-    recording_start()    
-
-def button_click_stop():
     global selected_id
     selected_id = show_selection()
     global file_to_create
     file_to_create = SOUNDFILE_ROOT + filelist[selected_id]
-    recording_stop(file_to_create)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(recording_start(file_to_create))
+#     recording_start(file_to_create)    
+
+
+def button_click_stop():
+    recording_stop()
     
 
 #def show_selection():
@@ -78,7 +81,7 @@ def button_click_stop():
 #        print(lb.get(i))
 #    return i
 
-def recording_start():
+async def recording_start(filename):
     global audio
     audio = pyaudio.PyAudio() #pyaudio.PyAudio()
     global stream
@@ -86,36 +89,39 @@ def recording_start():
         rate=RATE, input=True,
         input_device_index = iDeviceIndex, #録音デバイスのインデックス番号
         frames_per_buffer=CHUNK)
-
+    FLAG_RECORDING = 1
     print ("recording...")
     global frames
     frames = []
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
        data = stream.read(CHUNK)
        frames.append(data)
-
-def recording_stop(filename):
-     print ("finished recording")
-     stream.stop_stream()
-     stream.close()
-     audio.terminate()
-     full_filename = filename + '.wav'
-     waveFile = wave.open( full_filename, 'wb')
-     waveFile.setnchannels(CHANNELS)
-     waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-     waveFile.setframerate(RATE)
-     waveFile.writeframes(b''.join(frames))
-     waveFile.close()
-     mp3_filename = filename + '.mp3'
-     if(os.path.exists(full_filename)):
-       sound = pydub.AudioSegment.from_wav(full_filename)
+#       await asyncio.sleep(1)
+       if FLAG_RECORDING==0:
+            break
+    print ("finished recording")
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+    full_filename = filename + '.wav'
+    waveFile = wave.open( full_filename, 'wb')
+    waveFile.setnchannels(CHANNELS)
+    waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+    waveFile.setframerate(RATE)
+    waveFile.writeframes(b''.join(frames))
+    waveFile.close()
+    mp3_filename = filename + '.mp3'
+    if(os.path.exists(full_filename)):
+      sound = pydub.AudioSegment.from_wav(full_filename)
 #       sound.export(mp3_filename,format="mp3")
-       sound.export(mp3_filename,codec="libmp3lame")
+      sound.export(mp3_filename,codec="libmp3lame")
+    if(os.path.exists(mp3_filename)):
+      complete_status[selected_id] = '完了'
+      lb3.delete(selected_id,selected_id) 
+      lb3.insert(selected_id,complete_status[selected_id]) 
 
-     if(os.path.exists(mp3_filename)):
-       complete_status[selected_id] = '完了'
-       lb3.delete(selected_id,selected_id) 
-       lb3.insert(selected_id,complete_status[selected_id]) 
+async def recording_stop():
+      FLAG_RECORDING = 0 
 
 
 #def refresh_list():
@@ -130,7 +136,7 @@ def recording_stop(filename):
 if __name__ == '__main__':
     root = Tk()
     root.title('台詞レコーダー')
-    root.geometry("1200x900")
+#    root.geometry("1200x900")
 
 
     # Frame
@@ -213,6 +219,6 @@ if __name__ == '__main__':
     #Button
     button4 = ttk.Button(frame1, text='終了', command=button_click_exit)
     button4.grid(row=3, column=4, columnspan=3)
-
+    
     
 root.mainloop()
