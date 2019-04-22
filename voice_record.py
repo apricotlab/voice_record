@@ -11,7 +11,7 @@ from pydub.playback import play
 import asyncio
 
 SOUNDFILE_ROOT = './sound/'
-RECORD_SECONDS = 10 #録音する時間の長さ（秒）
+RECORD_SECONDS = 5 #録音する時間の長さ（秒）
 iDeviceIndex = 0 #録音デバイスのインデックス番号
  
 #基本情報の設定
@@ -27,21 +27,6 @@ def button_click_exit():
 
 
 def play_sound(sound):
-#    wf = wave.open(sound, "r")
-#    # ストリームを開く
-#    p = pyaudio.PyAudio()
-#    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-#                    channels=wf.getnchannels(),
-#                    rate=wf.getframerate(),
-#                    output=True)
-#
-#    # チャンク単位でストリームに出力し音声を再生
-#    chunk = 1024
-#    data = wf.readframes(chunk)
-#    while data != b'':
-#        stream.write(data)
-#        data = wf.readframes(chunk)
-#    stream.close()
     audio_data = AudioSegment.from_mp3(sound)
     play(audio_data)
     
@@ -54,7 +39,6 @@ def show_selection():
 
 
 def button_click_play():
-#    sound = AudioSegment.from_file("./sound/topic_1.wav", "wav")
     soundfile =SOUNDFILE_ROOT +  filelist[show_selection()] + '.mp3'
     if(os.path.exists(soundfile)):
        print(soundfile)
@@ -74,12 +58,7 @@ def button_click_start():
 
 def button_click_stop():
     recording_stop()
-    
 
-#def show_selection():
-#    for i in lb.curselection():
-#        print(lb.get(i))
-#    return i
 
 async def recording_start(filename):
     global audio
@@ -113,24 +92,15 @@ async def recording_start(filename):
     mp3_filename = filename + '.mp3'
     if(os.path.exists(full_filename)):
       sound = pydub.AudioSegment.from_wav(full_filename)
-#       sound.export(mp3_filename,format="mp3")
       sound.export(mp3_filename,codec="libmp3lame")
     if(os.path.exists(mp3_filename)):
-      complete_status[selected_id] = '完了'
-      lb3.delete(selected_id,selected_id) 
-      lb3.insert(selected_id,complete_status[selected_id]) 
+      lb.itemconfig(selected_id, bg = "green2")
+
+
 
 async def recording_stop():
       FLAG_RECORDING = 0 
 
-
-#def refresh_list():
-#    for i, name in enumerate(currencies):
-#       name = 'topic_' + str(i) + '.wav'
-#       if(os.path.exists(SOUNDFILE_ROOT + name)):
-#         complete_status[i] = '完了'
-#         lb3.delete(i,i) 
-#         lb3.insert(i,complete_status[i]) 
 
 
 if __name__ == '__main__':
@@ -145,6 +115,7 @@ if __name__ == '__main__':
 #    frame1.grid(column=0, row=0, sticky=(Tk.W + Tk.E))
     root.columnconfigure(0,weight=3,uniform='group1')
     root.columnconfigure(1,weight=1,uniform='group1')
+    root.resizable(0,0)
     path = './scenario_sentence.txt'
     with open(path) as f:
 #      l = f.readlines()
@@ -153,7 +124,7 @@ if __name__ == '__main__':
     # Listbox
     v1 = StringVar(value=currencies)
     lb = Listbox(frame1, listvariable=v1,height=20)
-    lb.grid(row=0, column=0)
+    lb.grid(row=0, column=0,columnspan=5)
 
  # Scrollbar
     scrollbar = ttk.Scrollbar(
@@ -161,7 +132,7 @@ if __name__ == '__main__':
         orient=VERTICAL,
         command=lb.yview)
     lb['yscrollcommand'] = scrollbar.set
-    scrollbar.grid(row=0,column=1,sticky=(N,S))
+    scrollbar.grid(row=0,column=5,sticky=(N,S))
  
     filelist = []
     
@@ -171,7 +142,7 @@ if __name__ == '__main__':
 
     v2 = StringVar(value=filelist)
     lb2 = Listbox(frame1, listvariable=v2,height=20)
-    lb2.grid(row=0, column=2)
+    lb2.grid(row=0, column=6,columnspan=2)
 
  # Scrollbar
     scrollbar = ttk.Scrollbar(
@@ -179,28 +150,17 @@ if __name__ == '__main__':
         orient=VERTICAL,
         command=lb2.yview)
     lb2['yscrollcommand'] = scrollbar.set
-    scrollbar.grid(row=0,column=3,sticky=(N,S))
+    scrollbar.grid(row=0,column=8,sticky=(N,S))
 
 
     complete_status = []
     for i, name in enumerate(currencies):
        if(os.path.exists(SOUNDFILE_ROOT + filelist[i] + '.mp3' )):
-         name = '完了'
+         lb.itemconfig(i, bg = "green2")
        else:
-         name = '未完了'
+         lb.itemconfig(i, bg = "yellow")
        complete_status.append(name)
 
-    v3 = StringVar(value=complete_status)
-    lb3 = Listbox(frame1, listvariable=v3,height=20)
-    lb3.grid(row=0, column=4)
-
- # Scrollbar
-    scrollbar = ttk.Scrollbar(
-        frame1,
-        orient=VERTICAL,
-        command=lb3.yview)
-    lb3['yscrollcommand'] = scrollbar.set
-    scrollbar.grid(row=0,column=5,sticky=(N,S))
 
     #Button
     button1 = ttk.Button(frame1, text='録音開始', command=button_click_start)
