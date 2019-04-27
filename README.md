@@ -29,6 +29,7 @@ https://github.com/cwilso/AudioRecorder
 
 Under the downloaded directory do the following
 
+<PRE>
 $ npm init -y
 $ npm i http-server -D
 $ vi package.json
@@ -48,6 +49,7 @@ $ vi package.json
 }
 
 $ npm start
+</PRE>
 
 From Firefox Browser <br>
 
