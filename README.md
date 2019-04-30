@@ -60,6 +60,14 @@ http://127.0.0.1:8080
 Reference
 https://qiita.com/okunokentaro/items/0658f4a6c75270da726a
 
+<h2>Dialogflow and Webhook to invoke IFTTT</h2>
+
+Define:  IF this (Webhook), then that (LINE Message)
+
+IFTTT<br>
+https://ifttt.com/discover
+
+
 
 <h2>Twilio Integration</h2>
 
