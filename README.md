@@ -70,8 +70,8 @@ export PATH=/usr/local/bin:$PATH<br>
 python -m pip install pydub<br>
 
 <b>How to run</b>
-Place wav2mp3.py in the directory where the .wav files exist.
-Then run the following:
+Place wav2mp3.py in the directory where the .wav files exist.<br>
+Then run the following:<br>
 python3 wav2mp3.py
  
  
