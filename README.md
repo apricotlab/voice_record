@@ -60,7 +60,24 @@ http://127.0.0.1:8080
 Reference
 https://qiita.com/okunokentaro/items/0658f4a6c75270da726a
 
-<h2>Dialogflow and Webhook to invoke IFTTT</h2>
+
+<h1>wav2mp3</h1>
+
+Batch conversion from WAV to mp3
+
+<b>How to prepare</b>
+export PATH=/usr/local/bin:$PATH<br>
+python -m pip install pydub<br>
+
+<b>How to run</b>
+Place wav2mp3.py in the directory where the .wav files exist.
+Then run the following:
+python3 wav2mp3.py
+ 
+ 
+
+
+<h1>Dialogflow and Webhook to invoke IFTTT</h1>
 
 Define:  IF this (Webhook), then that (LINE Message)
 
