@@ -99,3 +99,6 @@ Reference:https://sleepless-se.net/2018/05/22/googlecloudstorage%E3%81%A7python%
 
 If You encoutner:  ImportError: No module named 'google'  Error, follow the last comment of this article<br>
 https://stackoverflow.com/questions/36183486/importerror-no-module-named-google
+
+pip install google.cloud.bigquery
+pip install google.cloud.storage
