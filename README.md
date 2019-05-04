@@ -102,3 +102,12 @@ https://stackoverflow.com/questions/36183486/importerror-no-module-named-google
 
 pip install google.cloud.bigquery
 pip install google.cloud.storage
+
+
+<h1>Creating intent thru API</h1>
+
+On Google Cloud Platform Console<br>
+Provide the Administrator role to the following member in IAM.
+dialogflow-utyfrq@apricotlabcallcenter.iam.gserviceaccount.com
+プロジェクト
+ApricotlabCallCenter
