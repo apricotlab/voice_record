@@ -109,3 +109,7 @@ pip install google.cloud.storage
 On Google Cloud Platform Console<br>
 Provide the Administrator role to the following member in IAM.<br>
 dialogflow-utyfrq@apricotlabcallcenter.iam.gserviceaccount.com
+
+From terminal<BR>
+Specify the key file thru environment value:<br>
+export GOOGLE_APPLICATION_CREDENTIALS=./ApricotlabCallCenter-XXXXXXXXXXXXXXX.json
