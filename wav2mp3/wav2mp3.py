@@ -4,7 +4,7 @@ import os
 
 # Article https://qiita.com/hasepy/items/8e6a0757da1ce074ce87
 
-ROOT_PATH = './'
+ROOT_PATH = './data/'
 
 
 def process(file_path):
