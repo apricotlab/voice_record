@@ -19,19 +19,17 @@
 #
 #
 #
-  
-echo "Intent:"  $1
-echo "Traning Phrase:"  $2
-echo "Response Phrase:" $3
-echo "mp3file:" $4
 
+DATA_CSV_FILE='./data/ApricotlabCallCenter.csv'
 
-response_str='<speak><audio src="https://storage.googleapis.com/ai-sound-apricotlab/ApricotlabCallCenter/'${4}'"/><sub alias="">'${3}'</sub></speak>'
+function create_intent(){
 
-echo  $response_str
+ response_str='<speak><audio src="https://storage.googleapis.com/ai-sound-apricotlab/ApricotlabCallCenter/'${4}'"/><sub alias="">'${3}'</sub></speak>'
 
-curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) -H "Content-Type: application/json; charset=utf-8" --data "{
-  'displayName': '${1}',
+ echo  $response_str
+
+ curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) -H "Content-Type: application/json; charset=utf-8" --data "{
+  'displayName': '$1',
   'priority': 500000,
   'webhookState': 'WEBHOOK_STATE_UNSPECIFIED',
   'trainingPhrases': [
@@ -39,7 +37,7 @@ curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-
       'type': 'EXAMPLE',
       'parts': [
         {
-          'text': '${2}'
+          'text':  ${2}
         }
       ]
     }
@@ -55,4 +53,17 @@ curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-
       }
     ],
 }" "https://dialogflow.googleapis.com/v2/projects/apricotlabcallcenter/agent/intents"
-  
+
+}
+
+cat ${DATA_CSV_FILE} | while read line
+#cat "./data/ApricotlabCallCenter.csv" | while read line
+do
+  arg1=`echo ${line} | cut -d , -f 1`
+  arg2=`echo ${line} | cut -d , -f 2`
+  arg3=`echo ${line} | cut -d , -f 3`
+  arg4=`echo ${line} | cut -d , -f 4`
+  echo "Processing Intent: " $arg1
+  create_intent $arg1 $arg2 $arg3 $arg4
+done
+
