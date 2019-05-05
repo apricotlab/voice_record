@@ -65,7 +65,7 @@ https://qiita.com/okunokentaro/items/0658f4a6c75270da726a
 
 Batch conversion from WAV to mp3
 
-<b>How to prepare</b>
+<b>How to prepare</b><br>
 export PATH=/usr/local/bin:$PATH<br>
 python -m pip install pydub<br>
 
