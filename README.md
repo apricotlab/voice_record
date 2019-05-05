@@ -112,7 +112,7 @@ dialogflow-utyfrq@apricotlabcallcenter.iam.gserviceaccount.com
 
 From terminal<BR>
 Specify the key file thru environment value:<br>
-export GOOGLE_APPLICATION_CREDENTIALS=./ApricotlabCallCenter-115aXXXXXXXXXXXXXXX.json
+export GOOGLE_APPLICATION_CREDENTIALS=./keys/ApricotlabCallCenter-115aXXXXXXXXXXXXXXX.json
 
 It is also necessary to install gcloud <br>
 https://qiita.com/kentarosasaki/items/2232113b44b016a56adc <br>
