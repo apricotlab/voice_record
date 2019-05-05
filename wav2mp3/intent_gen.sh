@@ -1,14 +1,37 @@
 #!/bin/sh
+#
+#
+#  PROGRAM: intent_gen.sh
+#
+#  How To use:
+#
+#  intent_gen.sh [intent] [traning phrase] [response phrase] [mp3file]
+#
+#  NOTE: 
+#  Specify the key file thru environment value:
+#
+#      export GOOGLE_APPLICATION_CREDENTIALS=./XXXXXXX.json
+#
+#  EXAMPLE:
+# 
+#  intent_gen.sh HOBBY "What do you like?" "I like cooking" welcome01.mp3
+#  
+#
+#
+#
   
-echo $1
-echo $2
+echo "Intent:"  $1
+echo "Traning Phrase:"  $2
+echo "Response Phrase:" $3
+echo "mp3file:" $4
 
-str1='<speak><audio src="https://storage.googleapis.com/ai-sound-apricotlab/ApricotlabCallCenter/'${1}'"/><sub alias="">'${2}'</sub></speak>'
 
-echo  $str1
+response_str='<speak><audio src="https://storage.googleapis.com/ai-sound-apricotlab/ApricotlabCallCenter/'${4}'"/><sub alias="">'${3}'</sub></speak>'
+
+echo  $response_str
 
 curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) -H "Content-Type: application/json; charset=utf-8" --data "{
-  'displayName': 'KIRITAI',
+  'displayName': '${1}',
   'priority': 500000,
   'webhookState': 'WEBHOOK_STATE_UNSPECIFIED',
   'trainingPhrases': [
@@ -16,7 +39,7 @@ curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-
       'type': 'EXAMPLE',
       'parts': [
         {
-          'text': 'What rooms are available at 10am today?'
+          'text': '${2}'
         }
       ]
     }
@@ -26,7 +49,7 @@ curl -X POST -H "Authorization: Bearer "$(gcloud auth application-default print-
       {
         'text': {
           'text': [
-           '${str1} '
+           '${response_str}'
           ]
         }
       }
